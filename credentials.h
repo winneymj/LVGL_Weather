@@ -2,7 +2,7 @@
 #define CREDENTIALS_H_
 
 // Use your own API key by signing up for a free developer account at https://openweathermap.org/
-String apikey       = "e4eba391baab97a6e8281e188e6ea02c"; // See: https://openweathermap.org/
+String apikey       = "***************************"; // See: https://openweathermap.org/
 const char server[] = "api.weather.gov";
 
 //Set your location according to OWM locations
