@@ -53,40 +53,11 @@ NetworkStatus Network::initialize()
     return NetworkStatus::NO_NETWORK_CONFIGURED;
   }
 
-  auto wifiStatus = Network::startWiFi();
-
   if (WiFi.status() == WL_CONNECTED)
   {
   }
 
   return NetworkStatus::OK;
-}
-
-uint8_t Network::startWiFi()
-{
-  Serial.println("\r\nConnecting to: " + String(ssid) +", pwd:" + password);
-
-  IPAddress dns(8, 8, 8, 8); // Use Google DNS
-  WiFi.disconnect();
-  WiFi.mode(WIFI_STA); // switch off AP
-  WiFi.setAutoConnect(true);
-  WiFi.setAutoReconnect(true);
-  WiFi.begin(ssid, password);
-  if (WiFi.waitForConnectResult() != WL_CONNECTED)
-  {
-    Serial.printf("STA: Failed!\n");
-    WiFi.disconnect(false);
-    delay(500);
-    WiFi.begin(ssid, password);
-  }
-  if (WiFi.status() == WL_CONNECTED)
-  {
-    wifi_signal_strength = WiFi.RSSI();
-    Serial.println("WiFi connected at: " + WiFi.localIP().toString());
-  }
-  else
-    Serial.println("WiFi connection *** FAILED ***");
-  return WiFi.status();
 }
 
 void Network::stopWiFi()
@@ -105,11 +76,11 @@ String Network::getSSID()
 }
 
 // Returns 0 if fails...else # bytes written
-bool Network::setSSID(const String& ssid)
+bool Network::setSSID(const std::string& ssid)
 {
   // Save the SSID using Preferences library so it is persistent across reboot
   preferences.begin("my_app");
-  auto result = preferences.putString("ssid", ssid);
+  auto result = preferences.putString("ssid", ssid.c_str());
   preferences.end();
   return result;
 }
@@ -123,11 +94,11 @@ String Network::getPassword()
 }
 
 // Returns 0 if fails...else # bytes written
-bool Network::setPassword(const String& pwd)
+bool Network::setPassword(const std::string& pwd)
 {
   // Save the PWD using Preferences library so it is persistent across reboot
   preferences.begin("my_app");
-  auto result = preferences.putString("password", pwd);
+  auto result = preferences.putString("password", pwd.c_str());
   preferences.end();
   return result;
 }
@@ -160,6 +131,25 @@ void Network::stopNetworkScanner()
   }
 }
 
+void Network::startWifiConnection()
+{
+  if (ntScanTaskHandler == NULL)
+  {
+    networkStatus = NETWORK_CONNECTING;
+    xTaskCreate(startWIFITask,
+                "StartWIFITask",
+                4096,
+                NULL,
+                1,
+                &ntScanTaskHandler);
+  }
+}
+
+void Network::stopWifiConnection()
+{
+  stopNetworkScanner();
+}
+
 void Network::scanWIFITask(void *pvParameters)
 {
   while (1)
@@ -176,5 +166,39 @@ void Network::scanWIFITask(void *pvParameters)
     }
     networkStatus = NETWORK_SEARCHING_DONE;
     vTaskDelay(5000);
+  }
+}
+
+void Network::startWIFITask(void *pvParameters)
+{
+  while (1)
+  {
+    Serial.println("Network::startWIFITask:ENTER");
+    Serial.println("\r\nConnecting to: " + String(ssid) +", pwd:" + password);
+
+    IPAddress dns(8, 8, 8, 8); // Use Google DNS
+    WiFi.disconnect();
+    WiFi.mode(WIFI_STA); // switch off AP
+    WiFi.setAutoConnect(true);
+    WiFi.setAutoReconnect(true);
+    WiFi.begin(ssid, password);
+    if (WiFi.waitForConnectResult() != WL_CONNECTED)
+    {
+      Serial.printf("STA: Failed!\n");
+      WiFi.disconnect(false);
+      vTaskDelay(500);
+      WiFi.begin(ssid, password);
+    }
+    if (WiFi.status() == WL_CONNECTED)
+    {
+      wifi_signal_strength = WiFi.RSSI();
+      Serial.println("WiFi connected at: " + WiFi.localIP().toString());
+    }
+    else
+    {
+      Serial.println("WiFi connection *** FAILED ***");
+    }
+
+    networkStatus = NETWORK_SEARCHING_DONE;
   }
 }

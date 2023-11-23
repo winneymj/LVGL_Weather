@@ -11,6 +11,45 @@ extern Network network;
 static lv_timer_t *timer;
 static lv_obj_t *list_ctrl = NULL;
 
+static lv_style_t popupBox_style;
+static lv_obj_t *popupBox;
+static lv_obj_t *popupBoxCloseBtn;
+
+static void setStyle() {
+  // lv_style_init(&border_style);
+  // lv_style_set_border_width(&border_style, 2);
+  // lv_style_set_border_color(&border_style, lv_color_black());
+
+  lv_style_init(&popupBox_style);
+  lv_style_set_radius(&popupBox_style, 10);
+  lv_style_set_bg_opa(&popupBox_style, LV_OPA_COVER);
+  lv_style_set_border_color(&popupBox_style, lv_palette_main(LV_PALETTE_BLUE));
+  lv_style_set_border_width(&popupBox_style, 5);
+}
+
+void passphrase_event_handler(lv_event_t *e)
+{
+  lv_event_code_t code = lv_event_get_code(e);
+  lv_obj_t *obj = lv_event_get_target(e);
+
+  if (code == LV_EVENT_VALUE_CHANGED)
+  {
+    Serial.println("LV_EVENT_VALUE_CHANGED every char in passphrase");
+    // See if we have some text and only enable the OK button if we have something
+    auto const& passhraseText = lv_textarea_get_text(obj);
+    auto stdString = std::string(passhraseText);
+    stdString.erase(stdString.find_last_not_of(' ')+1); //Trim suffix
+    stdString.erase(0, stdString.find_first_not_of(' ')); //prefixing spaces
+    network.setPassword(stdString);
+
+
+    // auto len = stdString.length();
+    // Serial.print("passphrase len=");
+    // Serial.println(len);
+    // lv_textarea_set_text(obj, stdString);
+  }
+}
+
 void list_event_handler(lv_event_t *e)
 {
   lv_event_code_t code = lv_event_get_code(e);
@@ -18,10 +57,10 @@ void list_event_handler(lv_event_t *e)
 
   if (code == LV_EVENT_CLICKED)
   {
-    String selectedItem = String(lv_list_get_btn_text(list_ctrl, obj));
+    auto selectedItem = std::string(lv_list_get_btn_text(list_ctrl, obj));
     for (int i = 0; i < selectedItem.length() - 1; i++)
     {
-      if (selectedItem.substring(i, i + 2) == " (")
+      if (selectedItem.substr(i, i + 2) == " (")
       {
         // Serial.println("Clicked:" + selectedItem.substring(0, i));
 
@@ -30,7 +69,7 @@ void list_event_handler(lv_event_t *e)
 
         //Enable the OK button by clearing the state
         lv_obj_clear_state( ui_chooseConnectionOKBtn, LV_STATE_DISABLED );
-        network.setSSID(selectedItem.substring(0, i));
+        network.setSSID(selectedItem.substr(0, i));
         break;
       }
     }
@@ -46,6 +85,88 @@ void list_event_handler(lv_event_t *e)
         lv_obj_clear_state(child, LV_STATE_PRESSED);
     }
   }
+}
+
+static void btn_event_cb(lv_event_t *e) {
+  lv_event_code_t code = lv_event_get_code(e);
+  lv_obj_t *btn = lv_event_get_target(e);
+
+  if (code == LV_EVENT_CLICKED) {
+    // if (btn == settingBtn) {
+    //   lv_obj_clear_flag(settings, LV_OBJ_FLAG_HIDDEN);
+    // } else if (btn == settingCloseBtn) {
+    //   lv_obj_add_flag(settings, LV_OBJ_FLAG_HIDDEN);
+    // } else if (btn == mboxConnectBtn) {
+    //   ssidPW = String(lv_textarea_get_text(mboxPassword));
+
+    //   beginWIFITask();
+    //   //networkConnector();
+    //   lv_obj_move_background(mboxConnect);
+    //   popupMsgBox("Connecting!", "Attempting to connect to the selected network.");
+    // } else if (btn == mboxCloseBtn) {
+    //   lv_obj_move_background(mboxConnect);
+    // } else if (btn == popupBoxCloseBtn) {
+    //   lv_obj_move_background(popupBox);
+    // }
+
+  } else if (code == LV_EVENT_VALUE_CHANGED) {
+    // if (btn == settingWiFiSwitch) {
+
+    //   if (lv_obj_has_state(btn, LV_STATE_CHECKED)) {
+
+    //     if (ntScanTaskHandler == NULL) {
+    //       networkStatus = NETWORK_SEARCHING;
+    //       networkScanner();
+    //       timer = lv_timer_create(timerForNetwork, 1000, wfList);
+    //       lv_list_add_text(wfList, "WiFi: Looking for Networks...");
+    //     }
+
+    //   } else {
+
+    //     if (ntScanTaskHandler != NULL) {
+    //       networkStatus = NONE;
+    //       vTaskDelete(ntScanTaskHandler);
+    //       ntScanTaskHandler = NULL;
+    //       lv_timer_del(timer);
+    //       lv_obj_clean(wfList);
+    //     }
+
+    //     if (WiFi.status() == WL_CONNECTED) {
+    //       WiFi.disconnect(true);
+    //       lv_label_set_text(timeLabel, "WiFi Not Connected!    " LV_SYMBOL_CLOSE);
+    //     }
+    //   }
+    // }
+  }
+}
+
+void popupMsgBox(String title, String msg) {
+
+  if (popupBox != NULL) {
+    lv_obj_del(popupBox);
+  }
+
+  popupBox = lv_obj_create(lv_scr_act());
+  lv_obj_add_style(popupBox, &popupBox_style, 0);
+  lv_obj_set_size(popupBox, 800 * 2 / 3, 480 / 2);
+  lv_obj_center(popupBox);
+
+  lv_obj_t *popupTitle = lv_label_create(popupBox);
+  lv_label_set_text(popupTitle, title.c_str());
+  lv_obj_set_width(popupTitle, 800 * 2 / 3 - 50);
+  lv_obj_align(popupTitle, LV_ALIGN_TOP_LEFT, 0, 0);
+
+  lv_obj_t *popupMSG = lv_label_create(popupBox);
+  lv_obj_set_width(popupMSG, 800 * 2 / 3 - 50);
+  lv_label_set_text(popupMSG, msg.c_str());
+  lv_obj_align(popupMSG, LV_ALIGN_TOP_LEFT, 0, 40);
+
+  popupBoxCloseBtn = lv_btn_create(popupBox);
+  lv_obj_add_event_cb(popupBoxCloseBtn, btn_event_cb, LV_EVENT_ALL, NULL);
+  lv_obj_align(popupBoxCloseBtn, LV_ALIGN_BOTTOM_RIGHT, 0, 0);
+  lv_obj_t *btnLabel = lv_label_create(popupBoxCloseBtn);
+  lv_label_set_text(btnLabel, "Okay");
+  lv_obj_center(btnLabel);
 }
 
 void showingFoundWiFiList()
@@ -93,6 +214,17 @@ void timerForNetwork(lv_timer_t *timer)
       lv_timer_del(timer);
       break;
 
+    case NETWORK_CONNECTING:
+      Serial.println("Network::timerForNetwork:NETWORK_CONNECTING");
+      break;
+
+    case NETWORK_CONNECTED:
+      Serial.println("Network::timerForNetwork:NETWORK_CONNECTED");
+      network.stopWifiConnection();
+      lv_timer_del(timer);
+      popupMsgBox("WiFi Connected!", "Now you'll get the current time soon.");
+      break;
+
     // case NETWORK_CONNECTED_POPUP:
     //   popupMsgBox("WiFi Connected!", "Now you'll get the current time soon.");
     //   networkStatus = NETWORK_CONNECTED;
@@ -133,5 +265,8 @@ void InitializeChooseConnectionPage(lv_event_t * e)
 
 void InitializePassphrasePage(lv_event_t * e)
 {
-	// Your code here
+  // add event to the passphrase input field
+  lv_obj_add_event_cb(ui_passphraseText, passphrase_event_handler, LV_EVENT_VALUE_CHANGED, ui_Keyboard1);
+  network.startWifiConnection();
+  timer = lv_timer_create(timerForNetwork, 1000, list_ctrl);
 }

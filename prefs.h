@@ -11,12 +11,12 @@
 //   preferences.begin("my_app", false);
 
 //   // Temp Remove below once UI is developed
-//   if (!setSSID("*******"))
+//   if (!setSSID("ogsplosh"))
 //   {
 //     Serial.printf("Failed to set ssid!");
 //     return;
 //   }
-//   if (!setPassword("***********"))
+//   if (!setPassword("7526250244"))
 //   {
 //     Serial.printf("Failed to set pwd!");
 //     return;
