@@ -5,8 +5,6 @@
 
 Preferences preferences;
 
-String Network::ssid = "";
-String Network::password = "";
 int Network::wifi_signal_strength = 0;
 Network_Status_t networkStatus = NONE;
 TaskHandle_t Network::ntScanTaskHandler = {};
@@ -23,15 +21,15 @@ std::vector<String> Network::retrieveSSIDList()
 
 NetworkStatus Network::initialize()
 {
-  if (ssid.isEmpty() || password.isEmpty())
-  {
-    // Get list of SSID's and return ssid/pwd needed
-    return NetworkStatus::NO_NETWORK_CONFIGURED;
-  }
+  // if (ssid.isEmpty() || password.isEmpty())
+  // {
+  //   // Get list of SSID's and return ssid/pwd needed
+  //   return NetworkStatus::NO_NETWORK_CONFIGURED;
+  // }
 
-  if (WiFi.status() == WL_CONNECTED)
-  {
-  }
+  // if (WiFi.status() == WL_CONNECTED)
+  // {
+  // }
 
   return NetworkStatus::OK;
 }
@@ -109,6 +107,7 @@ void Network::stopNetworkScanner()
 
 void Network::startWifiConnection()
 {
+  Serial.println("Network::startWifiConnection(): ENTER");
   if (ntScanTaskHandler == NULL)
   {
     networkStatus = NETWORK_CONNECTING;
@@ -150,31 +149,31 @@ void Network::startWIFITask(void *pvParameters)
   while (1)
   {
     Serial.println("Network::startWIFITask:ENTER");
-    Serial.println("\r\nConnecting to: " + String(ssid) +", pwd:" + password);
+    Serial.println("\r\nConnecting to: " + Network::getSSID() +", pwd:" + Network::getPassword());
 
     IPAddress dns(8, 8, 8, 8); // Use Google DNS
     WiFi.disconnect();
     WiFi.mode(WIFI_STA); // switch off AP
     WiFi.setAutoConnect(true);
     WiFi.setAutoReconnect(true);
-    WiFi.begin(ssid, password);
+    WiFi.begin(Network::getSSID(), Network::getPassword());
     if (WiFi.waitForConnectResult() != WL_CONNECTED)
     {
       Serial.printf("STA: Failed!\n");
       WiFi.disconnect(false);
       vTaskDelay(500);
-      WiFi.begin(ssid, password);
+      WiFi.begin(Network::getSSID(), Network::getPassword());
     }
     if (WiFi.status() == WL_CONNECTED)
     {
       wifi_signal_strength = WiFi.RSSI();
       Serial.println("WiFi connected at: " + WiFi.localIP().toString());
+      networkStatus = NETWORK_CONNECTED;
     }
     else
     {
       Serial.println("WiFi connection *** FAILED ***");
+      networkStatus = NETWORK_CONNECTION_FAILED;
     }
-
-    networkStatus = NETWORK_SEARCHING_DONE;
   }
 }

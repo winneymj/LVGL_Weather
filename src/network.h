@@ -17,6 +17,7 @@ typedef enum {
   NETWORK_SEARCHING_DONE,
   NETWORK_CONNECTING,
   NETWORK_CONNECTED,
+  NETWORK_CONNECTION_FAILED,
 
   NETWORK_CONNECTED_POPUP,
   NETWORK_CONNECT_FAILED
@@ -28,10 +29,10 @@ public:
   NetworkStatus initialize();
   static uint8_t startWiFi();
   static void stopWiFi();
-  String getSSID();
-  bool setSSID(const std::string& ssid);
-  String getPassword();
-  bool setPassword(const std::string& pwd);
+  static String getSSID();
+  static bool setSSID(const std::string& ssid);
+  static String getPassword();
+  static bool setPassword(const std::string& pwd);
   std::vector<String> retrieveSSIDList();
   static void startNetworkScanner();
   static void stopNetworkScanner();
@@ -41,8 +42,6 @@ public:
   static void startWifiConnection();
   static void stopWifiConnection();
 
-  static String ssid;
-  static String password;
   static int wifi_signal_strength;
   static std::vector<String> foundWifiList;
   static Network_Status_t networkStatus;

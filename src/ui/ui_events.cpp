@@ -40,42 +40,51 @@ void passphrase_event_handler(lv_event_t *e)
     auto stdString = std::string(passhraseText);
     stdString.erase(stdString.find_last_not_of(' ')+1); //Trim suffix
     stdString.erase(0, stdString.find_first_not_of(' ')); //prefixing spaces
-    network.setPassword(stdString);
 
+    auto len = stdString.length();
+    Serial.print("passphrase len=");
+    Serial.println(len);
 
-    // auto len = stdString.length();
-    // Serial.print("passphrase len=");
-    // Serial.println(len);
-    // lv_textarea_set_text(obj, stdString);
+    // Enable the OK button by clearing the state
+    if (len >= 0)
+    {
+      lv_obj_clear_state( ui_passphraseOKBtn, LV_STATE_DISABLED );
+      network.setPassword(stdString);
+    }
   }
 }
 
 void list_event_handler(lv_event_t *e)
 {
+  Serial.println("list_event_handler: ENTER");
   lv_event_code_t code = lv_event_get_code(e);
   lv_obj_t *obj = lv_event_get_target(e);
 
   if (code == LV_EVENT_CLICKED)
   {
+    Serial.println("list_event_handler: LV_EVENT_CLICKED");
     auto selectedItem = std::string(lv_list_get_btn_text(list_ctrl, obj));
-    for (int i = 0; i < selectedItem.length() - 1; i++)
-    {
-      if (selectedItem.substr(i, i + 2) == " (")
-      {
-        // Serial.println("Clicked:" + selectedItem.substring(0, i));
+    Serial.print("list_event_handler: selectedItem=");
+    Serial.println(selectedItem.c_str());
+    auto pos = selectedItem.find_first_of(" (");
 
-        // Set button selected
-        lv_obj_add_state(obj, LV_STATE_PRESSED);
+    Serial.print("list_event_handler: pos=");
+    Serial.println(pos);
 
-        //Enable the OK button by clearing the state
-        lv_obj_clear_state( ui_chooseConnectionOKBtn, LV_STATE_DISABLED );
-        network.setSSID(selectedItem.substr(0, i));
-        break;
-      }
-    }
+    Serial.print("Clicked='");
+    Serial.print(selectedItem.substr(0, pos).c_str());
+    Serial.println("'");
+
+    // Set button selected
+    lv_obj_add_state(obj, LV_STATE_PRESSED);
+
+    //Enable the OK button by clearing the state
+    lv_obj_clear_state( ui_chooseConnectionOKBtn, LV_STATE_DISABLED );
+    network.setSSID(selectedItem.substr(0, pos));
   }
   else if (code == LV_EVENT_PRESSED)
   {
+    Serial.println("list_event_handler: LV_EVENT_PRESSED");
     for(int i = 0; i < lv_obj_get_child_cnt(list_ctrl); i++)
     {
       lv_obj_t * child = lv_obj_get_child(list_ctrl, i);
@@ -148,16 +157,16 @@ void popupMsgBox(String title, String msg) {
 
   popupBox = lv_obj_create(lv_scr_act());
   lv_obj_add_style(popupBox, &popupBox_style, 0);
-  lv_obj_set_size(popupBox, 800 * 2 / 3, 480 / 2);
+  lv_obj_set_size(popupBox, 480 * 2 / 3, 320 / 2);
   lv_obj_center(popupBox);
 
   lv_obj_t *popupTitle = lv_label_create(popupBox);
   lv_label_set_text(popupTitle, title.c_str());
-  lv_obj_set_width(popupTitle, 800 * 2 / 3 - 50);
+  lv_obj_set_width(popupTitle, 480 * 2 / 3 - 50);
   lv_obj_align(popupTitle, LV_ALIGN_TOP_LEFT, 0, 0);
 
   lv_obj_t *popupMSG = lv_label_create(popupBox);
-  lv_obj_set_width(popupMSG, 800 * 2 / 3 - 50);
+  lv_obj_set_width(popupMSG, 480 * 2 / 3 - 50);
   lv_label_set_text(popupMSG, msg.c_str());
   lv_obj_align(popupMSG, LV_ALIGN_TOP_LEFT, 0, 40);
 
@@ -225,6 +234,15 @@ void timerForNetwork(lv_timer_t *timer)
       popupMsgBox("WiFi Connected!", "Now you'll get the current time soon.");
       break;
 
+    case NETWORK_CONNECTION_FAILED:
+      Serial.println("Network::timerForNetwork:NETWORK_CONNECTION_FAILED");
+      network.stopWifiConnection();
+      lv_timer_del(timer);
+      // network.stopWifiConnection();
+      // lv_timer_del(timer);
+      // popupMsgBox("WiFi Connected!", "Now you'll get the current time soon.");
+      break;
+
     // case NETWORK_CONNECTED_POPUP:
     //   popupMsgBox("WiFi Connected!", "Now you'll get the current time soon.");
     //   networkStatus = NETWORK_CONNECTED;
@@ -249,7 +267,8 @@ void timerForNetwork(lv_timer_t *timer)
 
 void passphraseOkCallback(lv_event_t * e)
 {
-	// Your code here
+  network.startWifiConnection();
+  timer = lv_timer_create(timerForNetwork, 1000, list_ctrl);
 }
 
 void InitializeChooseConnectionPage(lv_event_t * e)
@@ -267,6 +286,4 @@ void InitializePassphrasePage(lv_event_t * e)
 {
   // add event to the passphrase input field
   lv_obj_add_event_cb(ui_passphraseText, passphrase_event_handler, LV_EVENT_VALUE_CHANGED, ui_Keyboard1);
-  network.startWifiConnection();
-  timer = lv_timer_create(timerForNetwork, 1000, list_ctrl);
 }
