@@ -21,15 +21,23 @@ std::vector<String> Network::retrieveSSIDList()
 
 NetworkStatus Network::initialize()
 {
-  // if (ssid.isEmpty() || password.isEmpty())
-  // {
-  //   // Get list of SSID's and return ssid/pwd needed
-  //   return NetworkStatus::NO_NETWORK_CONFIGURED;
-  // }
+  Serial.println("Network::initialize():ENTER");
+  if (getSSID().isEmpty() || getPassword().isEmpty())
+  {
+    Serial.println("Network::initialize():NO_NETWORK_CONFIGURED");
+    return NetworkStatus::NO_NETWORK_CONFIGURED;
+  }
+  if (!getSSID().isEmpty() && !getPassword().isEmpty())
+  {
+    Serial.println("Network::initialize():got ssid & password");
+    WiFi.disconnect();
+    auto wifiStatus = wifiConnect();
 
-  // if (WiFi.status() == WL_CONNECTED)
-  // {
-  // }
+    Serial.print("Network::initialize():wifiStatus=");
+    Serial.println(static_cast<int>(wifiStatus));
+    if (wifiStatus != NETWORK_CONNECTED)
+      return NetworkStatus::CONNECTION_FAILED;
+  }
 
   return NetworkStatus::OK;
 }
@@ -144,36 +152,40 @@ void Network::scanWIFITask(void *pvParameters)
   }
 }
 
+Network_Status_t Network::wifiConnect()
+{
+  IPAddress dns(8, 8, 8, 8); // Use Google DNS
+  WiFi.disconnect();
+  WiFi.mode(WIFI_STA); // switch off AP
+  WiFi.setAutoConnect(true);
+  WiFi.setAutoReconnect(true);
+  WiFi.begin(Network::getSSID(), Network::getPassword());
+  if (WiFi.waitForConnectResult() != WL_CONNECTED)
+  {
+    Serial.printf("STA: Failed!\n");
+    WiFi.disconnect(false);
+    vTaskDelay(500);
+    WiFi.begin(Network::getSSID(), Network::getPassword());
+  }
+  if (WiFi.status() == WL_CONNECTED)
+  {
+    wifi_signal_strength = WiFi.RSSI();
+    Serial.println("WiFi connected at: " + WiFi.localIP().toString());
+    return NETWORK_CONNECTED;
+  }
+  else
+  {
+    Serial.println("WiFi connection *** FAILED ***");
+    return NETWORK_CONNECTION_FAILED;
+  }
+}
+
 void Network::startWIFITask(void *pvParameters)
 {
   while (1)
   {
     Serial.println("Network::startWIFITask:ENTER");
     Serial.println("\r\nConnecting to: " + Network::getSSID() +", pwd:" + Network::getPassword());
-
-    IPAddress dns(8, 8, 8, 8); // Use Google DNS
-    WiFi.disconnect();
-    WiFi.mode(WIFI_STA); // switch off AP
-    WiFi.setAutoConnect(true);
-    WiFi.setAutoReconnect(true);
-    WiFi.begin(Network::getSSID(), Network::getPassword());
-    if (WiFi.waitForConnectResult() != WL_CONNECTED)
-    {
-      Serial.printf("STA: Failed!\n");
-      WiFi.disconnect(false);
-      vTaskDelay(500);
-      WiFi.begin(Network::getSSID(), Network::getPassword());
-    }
-    if (WiFi.status() == WL_CONNECTED)
-    {
-      wifi_signal_strength = WiFi.RSSI();
-      Serial.println("WiFi connected at: " + WiFi.localIP().toString());
-      networkStatus = NETWORK_CONNECTED;
-    }
-    else
-    {
-      Serial.println("WiFi connection *** FAILED ***");
-      networkStatus = NETWORK_CONNECTION_FAILED;
-    }
+    wifiConnect();
   }
 }

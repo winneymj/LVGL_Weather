@@ -8,7 +8,8 @@
 enum class NetworkStatus
 {
   OK,
-  NO_NETWORK_CONFIGURED
+  NO_NETWORK_CONFIGURED,
+  CONNECTION_FAILED
 };
 
 typedef enum {
@@ -23,7 +24,8 @@ typedef enum {
   NETWORK_CONNECT_FAILED
 } Network_Status_t;
 
-class Network {
+class Network
+{
 public:
   Network(void);
   NetworkStatus initialize();
@@ -41,6 +43,7 @@ public:
 
   static void startWifiConnection();
   static void stopWifiConnection();
+  static Network_Status_t wifiConnect();
 
   static int wifi_signal_strength;
   static std::vector<String> foundWifiList;

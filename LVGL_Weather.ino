@@ -13,6 +13,7 @@
 #include "utilities.h"
 #include "src/ui/ui.h"
 #include "listboxView.h"
+#include "src/ntpTime.h"
 
 //################ PROGRAM VARIABLES and OBJECTS ##########################################
 
@@ -23,6 +24,7 @@ TwoWire tcWire = TwoWire(0);
 Adafruit_FT6206 ctp = Adafruit_FT6206();
 long StartTime = 0;
 Network network;
+NtpTime ntpTime;
 
 /*To use the built-in examples and demos of LVGL uncomment the includes below respectively.
  *You also need to copy `lvgl/examples` to `lvgl/src/examples`. Similarly for the demos `lvgl/demos` to `lvgl/src/demos`.
@@ -106,11 +108,6 @@ void initialiseDisplay()
   indev_drv.type = LV_INDEV_TYPE_POINTER;
   indev_drv.read_cb = my_touchpad_read;
   lv_indev_drv_register( &indev_drv );
-
-  // /* Create simple label */
-  // lv_obj_t *label = lv_label_create( lv_scr_act() );
-  // lv_label_set_text( label, "Hello Ardino and LVGL!");
-  // lv_obj_align( label, LV_ALIGN_CENTER, 0, 0 );
 }
 
 void initialiseTouch()
@@ -131,14 +128,21 @@ void InitialiseSystem()
   while (!Serial);
   Serial.println(String(__FILE__) + "\nStarting...");
 
-  // initializeNetworkPreferences(); // Initialize storage so we can get the ssid and pwd.
-  // initializeWeatherPreferences(); // Initialize storage so we can get the lat/long.
   initialiseDisplay();
   initialiseTouch();
 
   auto status = network.initialize();
+
   Serial.print("\nNetwork status=" + static_cast<int>(status));
   Serial.println(static_cast<int>(status));
+
+  if (status == NetworkStatus::OK)
+  {
+    // We got a wifi conection, get current time
+    ntpTime.getTime();
+  }
+
+  // Now we 
 }
 
 void setup() {

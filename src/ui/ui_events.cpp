@@ -149,9 +149,10 @@ static void btn_event_cb(lv_event_t *e) {
   }
 }
 
-void popupMsgBox(String title, String msg) {
-
-  if (popupBox != NULL) {
+void popupMsgBox(String title, String msg)
+{
+  if (popupBox != NULL)
+  {
     lv_obj_del(popupBox);
   }
 
@@ -231,7 +232,7 @@ void timerForNetwork(lv_timer_t *timer)
       Serial.println("Network::timerForNetwork:NETWORK_CONNECTED");
       network.stopWifiConnection();
       lv_timer_del(timer);
-      popupMsgBox("WiFi Connected!", "Now you'll get the current time soon.");
+      // popupMsgBox("WiFi Connected!", "Now you'll get the current time soon.");
       break;
 
     case NETWORK_CONNECTION_FAILED:
