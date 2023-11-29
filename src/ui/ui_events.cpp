@@ -5,8 +5,10 @@
 
 #include "ui.h"
 #include "../network.h"
+#include "../ntpTime.h"
 
 extern Network network;
+extern NtpTime ntpTime;
 
 static lv_timer_t *timer;
 static lv_obj_t *list_ctrl = NULL;
@@ -287,4 +289,12 @@ void InitializePassphrasePage(lv_event_t * e)
 {
   // add event to the passphrase input field
   lv_obj_add_event_cb(ui_passphraseText, passphrase_event_handler, LV_EVENT_VALUE_CHANGED, ui_Keyboard1);
+}
+
+void saveTimeDateSettings(lv_event_t * e)
+{
+  // Save the set time from internet checkbox and the timezone
+  const bool internetCheckedState = lv_obj_get_state(ui_internetTime) & LV_STATE_CHECKED ? true : false;
+  const int timezonePos = lv_dropdown_get_selected(ui_Dropdown1);
+  ntpTime.setInternetTimeEnabled(internetCheckedState);
 }

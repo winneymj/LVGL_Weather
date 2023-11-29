@@ -16,6 +16,10 @@ lv_obj_t *ui_Label1;
 void ui_event_Panel3( lv_event_t * e);
 lv_obj_t *ui_Panel3;
 lv_obj_t *ui_Label8;
+void ui_event_Panel4( lv_event_t * e);
+lv_obj_t *ui_Panel4;
+void ui_event_Label9( lv_event_t * e);
+lv_obj_t *ui_Label9;
 
 
 // SCREEN: ui_newOrExistingConnections
@@ -58,6 +62,18 @@ void ui_event_passphraseOKBtn_StandardButton( lv_event_t * e);
 lv_obj_t *ui_passphraseOKBtn;
 void ui_event_StandardButton1_StandardButton( lv_event_t * e);
 lv_obj_t *ui_StandardButton1;
+
+
+// SCREEN: ui_setTimeScreen
+void ui_setTimeScreen_screen_init(void);
+lv_obj_t *ui_setTimeScreen;
+lv_obj_t *ui_Label7;
+lv_obj_t *ui_internetTime;
+lv_obj_t *ui_TimeDateDoneBtn;
+void ui_event_TimeDateDoneBtn_Label12( lv_event_t * e);
+lv_obj_t *ui_twentyFourHrMode;
+lv_obj_t *ui_Dropdown1;
+lv_obj_t *ui_Label11;
 lv_obj_t *ui____initial_actions0;
 
 ///////////////////// TEST LVGL SETTINGS ////////////////////
@@ -75,6 +91,18 @@ void ui_event_Panel3( lv_event_t * e) {
     lv_event_code_t event_code = lv_event_get_code(e);lv_obj_t * target = lv_event_get_target(e);
 if ( event_code == LV_EVENT_CLICKED) {
       _ui_screen_change( &ui_newOrExistingConnections, LV_SCR_LOAD_ANIM_NONE, 0, 0, &ui_newOrExistingConnections_screen_init);
+}
+}
+void ui_event_Panel4( lv_event_t * e) {
+    lv_event_code_t event_code = lv_event_get_code(e);lv_obj_t * target = lv_event_get_target(e);
+if ( event_code == LV_EVENT_CLICKED) {
+      _ui_screen_change( &ui_setTimeScreen, LV_SCR_LOAD_ANIM_NONE, 0, 0, &ui_setTimeScreen_screen_init);
+}
+}
+void ui_event_Label9( lv_event_t * e) {
+    lv_event_code_t event_code = lv_event_get_code(e);lv_obj_t * target = lv_event_get_target(e);
+if ( event_code == LV_EVENT_CLICKED) {
+      _ui_screen_change( &ui_setTimeScreen, LV_SCR_LOAD_ANIM_NONE, 0, 0, &ui_setTimeScreen_screen_init);
 }
 }
 void ui_event_NewExistingOkBtn( lv_event_t * e) {
@@ -109,6 +137,12 @@ if ( event_code == LV_EVENT_CLICKED) {
       _ui_screen_change( &ui_chooseConnection, LV_SCR_LOAD_ANIM_NONE, 0, 0, &ui_chooseConnection_screen_init);
 }
 }
+void ui_event_TimeDateDoneBtn_Label12( lv_event_t * e) {
+    lv_event_code_t event_code = lv_event_get_code(e);lv_obj_t * target = lv_event_get_target(e);
+if ( event_code == LV_EVENT_CLICKED) {
+      saveTimeDateSettings( e );
+}
+}
 
 ///////////////////// SCREENS ////////////////////
 
@@ -122,6 +156,7 @@ ui_loadingScreen_screen_init();
 ui_newOrExistingConnections_screen_init();
 ui_chooseConnection_screen_init();
 ui_passphrase_screen_init();
+ui_setTimeScreen_screen_init();
 ui____initial_actions0 = lv_obj_create(NULL);
 lv_disp_load_scr( ui_loadingScreen);
 }

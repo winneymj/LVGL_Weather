@@ -1,4 +1,5 @@
 
+#include <Preferences.h>
 #include <WiFi.h>
 
 #include "ntpTime.h"
@@ -7,6 +8,8 @@
 const char* ntpServer = "pool.ntp.org";
 const long  gmtOffset_sec = 0;
 const int   daylightOffset_sec = 3600;
+
+extern Preferences preferences;
 
 NtpTime::NtpTime(void) {}
 
@@ -65,4 +68,23 @@ void NtpTime::getTime()
    
   printLocalTime();
 }
+
+bool NtpTime::getInternetTimeEnabled()
+{
+  preferences.begin("my_app");
+  String value = preferences.getString("internetTime", "");
+  preferences.end();
+  return value.equals("true");
+}
+
+// Returns 0 if fails...else # bytes written
+bool NtpTime::setInternetTimeEnabled(const bool enabled)
+{
+  // Save using Preferences library so it is persistent across reboot
+  preferences.begin("my_app");
+  auto result = preferences.putString("internetTime", enabled ? "true" : "false");
+  preferences.end();
+  return result;
+}
+
 

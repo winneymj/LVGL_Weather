@@ -13,6 +13,7 @@ extern "C" {
 void InitializeChooseConnectionPage(lv_event_t * e);
 void InitializePassphrasePage(lv_event_t * e);
 void passphraseOkCallback(lv_event_t * e);
+void saveTimeDateSettings(lv_event_t * e);
 
 #ifdef __cplusplus
 } /*extern "C"*/

@@ -33,6 +33,10 @@ extern lv_obj_t *ui_Label1;
 void ui_event_Panel3( lv_event_t * e);
 extern lv_obj_t *ui_Panel3;
 extern lv_obj_t *ui_Label8;
+void ui_event_Panel4( lv_event_t * e);
+extern lv_obj_t *ui_Panel4;
+void ui_event_Label9( lv_event_t * e);
+extern lv_obj_t *ui_Label9;
 // SCREEN: ui_newOrExistingConnections
 void ui_newOrExistingConnections_screen_init(void);
 extern lv_obj_t *ui_newOrExistingConnections;
@@ -69,6 +73,16 @@ void ui_event_passphraseOKBtn_StandardButton( lv_event_t * e);
 extern lv_obj_t *ui_passphraseOKBtn;
 void ui_event_StandardButton1_StandardButton( lv_event_t * e);
 extern lv_obj_t *ui_StandardButton1;
+// SCREEN: ui_setTimeScreen
+void ui_setTimeScreen_screen_init(void);
+extern lv_obj_t *ui_setTimeScreen;
+extern lv_obj_t *ui_Label7;
+extern lv_obj_t *ui_internetTime;
+extern lv_obj_t *ui_TimeDateDoneBtn;
+void ui_event_TimeDateDoneBtn_Label12( lv_event_t * e);
+extern lv_obj_t *ui_twentyFourHrMode;
+extern lv_obj_t *ui_Dropdown1;
+extern lv_obj_t *ui_Label11;
 extern lv_obj_t *ui____initial_actions0;
 
 

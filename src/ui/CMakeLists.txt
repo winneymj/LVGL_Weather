@@ -4,9 +4,9 @@ SET(SOURCES components/ui_comp_standardbutton.c
     screens/ui_newOrExistingConnections.c
     screens/ui_chooseConnection.c
     screens/ui_passphrase.c
+    screens/ui_setTimeScreen.c
     ui.c
     components/ui_comp_hook.c
-    ui_helpers.c
-    ui_events.cpp)
+    ui_helpers.c)
 
 add_library(ui ${SOURCES})

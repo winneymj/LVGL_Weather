@@ -6,6 +6,10 @@ class NtpTime
 public:
   NtpTime(void);
   void getTime();
+  bool getInternetTimeEnabled();
+  bool setInternetTimeEnabled(const bool enabled);
+
+
 
 
 private:
