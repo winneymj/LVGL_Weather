@@ -6,8 +6,43 @@
 #include "esp_sntp.h"
 
 const char* ntpServer = "pool.ntp.org";
-const long  gmtOffset_sec = 0;
-const int   daylightOffset_sec = 3600;
+// const int   daylightOffset_sec = 3600;
+const int   daylightOffset_sec = 0;
+
+const long gmtOffset_sec[] = {
+  0, // Greenwich Mean Time
+  0, // Universal Coordinated Time
+  3600, // European Central Time
+  7200, // Eastern European Time
+  7200, // (Arabic) Egypt Standard Time
+  10800, // Eastern African Time
+  12600, // Middle East Time
+  14400, // Near East Time
+  18000, // Pakistan Lahore Time
+  19800, // India Standard Time
+  21600, // Bangladesh Standard Time
+  25200, // Vietnam Standard Time
+  28800, // China Taiwan Time
+  32400, // Japan Standard Time
+  34200, // Australia Central Time
+  36000, // Australia Eastern Time
+  39600, // Solomon Standard Time
+  43200, // New Zealand Standard Time
+  -39600 // Midway Islands Time
+  -36000, // Hawaii Standard Time
+  -32400, // Alaska Standard Time
+  -28800, // Pacific Standard Time
+  -25200, // Phoenix Standard Time
+  -25200, // Mountain Standard Time
+  -21600, // Central Standard Time
+  -18000, // Eastern Standard Time
+  -18000, // Indiana Eastern Standard Time
+  -14400, // Puerto Rico and US Virgin Islands Time
+  -12600, // Canada Newfoundland Time
+  -10800, // Argentina Standard Time
+  -10800, // Brazil Eastern Time
+  -3600// Central African Time
+};
 
 extern Preferences preferences;
 
@@ -53,9 +88,12 @@ void NtpTime::getTime()
 {
   if (WiFi.status() != WL_CONNECTED)
     return;
-  
+
+  Serial.print("gmtOffset_sec[getTimeZonePos()]=");
+  Serial.println(gmtOffset_sec[getTimeZonePos()]);
+
   // Init and get the time
-  configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+  configTime(gmtOffset_sec[getTimeZonePos()], daylightOffset_sec, ntpServer);
 
   auto syncStatus = sntp_get_sync_status();
   while (syncStatus != SNTP_SYNC_STATUS_COMPLETED)
@@ -72,17 +110,45 @@ void NtpTime::getTime()
 bool NtpTime::getInternetTimeEnabled()
 {
   preferences.begin("my_app");
-  String value = preferences.getString("internetTime", "");
+  int value = preferences.getInt("internetTime", 0);
   preferences.end();
-  return value.equals("true");
+  return value;
 }
 
 // Returns 0 if fails...else # bytes written
 bool NtpTime::setInternetTimeEnabled(const bool enabled)
 {
+  Serial.print("setInternetTimeEnabled=");
+  Serial.println(enabled);
+
   // Save using Preferences library so it is persistent across reboot
   preferences.begin("my_app");
-  auto result = preferences.putString("internetTime", enabled ? "true" : "false");
+  auto result = preferences.putInt("internetTime", enabled ? 1 : 0);
+  preferences.end();
+  return result;
+}
+
+int NtpTime::getTimeZonePos()
+{
+  preferences.begin("my_app");
+  int value = preferences.getInt("timezonepos", 0);
+  preferences.end();
+
+  Serial.print("getTimeZonePos()=");
+  Serial.println(value);
+
+  return value;
+}
+
+// Returns 0 if fails...else # bytes written
+bool NtpTime::setTimeZonePos(const int pos)
+{
+  Serial.print("setTimeZonePos()=");
+  Serial.println(pos);
+
+  // Save using Preferences library so it is persistent across reboot
+  preferences.begin("my_app");
+  auto result = preferences.putInt("timezonepos", pos);
   preferences.end();
   return result;
 }

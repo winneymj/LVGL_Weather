@@ -293,8 +293,20 @@ void InitializePassphrasePage(lv_event_t * e)
 
 void saveTimeDateSettings(lv_event_t * e)
 {
+  Serial.println("saveTimeDateSettings:ENTER");
+
   // Save the set time from internet checkbox and the timezone
   const bool internetCheckedState = lv_obj_get_state(ui_internetTime) & LV_STATE_CHECKED ? true : false;
   const int timezonePos = lv_dropdown_get_selected(ui_Dropdown1);
   ntpTime.setInternetTimeEnabled(internetCheckedState);
+  ntpTime.setTimeZonePos(timezonePos);
+  ntpTime.getTime();
+}
+
+void initializeTimeScreen(lv_event_t * e)
+{
+  auto timezonePos = ntpTime.getTimeZonePos();
+  lv_dropdown_set_selected(ui_Dropdown1, timezonePos);
+
+  // @TODO Do checkboxes too
 }

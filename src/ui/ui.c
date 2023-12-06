@@ -66,11 +66,12 @@ lv_obj_t *ui_StandardButton1;
 
 // SCREEN: ui_setTimeScreen
 void ui_setTimeScreen_screen_init(void);
+void ui_event_setTimeScreen( lv_event_t * e);
 lv_obj_t *ui_setTimeScreen;
 lv_obj_t *ui_Label7;
 lv_obj_t *ui_internetTime;
+void ui_event_TimeDateDoneBtn_StandardButton( lv_event_t * e);
 lv_obj_t *ui_TimeDateDoneBtn;
-void ui_event_TimeDateDoneBtn_Label12( lv_event_t * e);
 lv_obj_t *ui_twentyFourHrMode;
 lv_obj_t *ui_Dropdown1;
 lv_obj_t *ui_Label11;
@@ -137,7 +138,13 @@ if ( event_code == LV_EVENT_CLICKED) {
       _ui_screen_change( &ui_chooseConnection, LV_SCR_LOAD_ANIM_NONE, 0, 0, &ui_chooseConnection_screen_init);
 }
 }
-void ui_event_TimeDateDoneBtn_Label12( lv_event_t * e) {
+void ui_event_setTimeScreen( lv_event_t * e) {
+    lv_event_code_t event_code = lv_event_get_code(e);lv_obj_t * target = lv_event_get_target(e);
+if ( event_code == LV_EVENT_SCREEN_LOAD_START) {
+      initializeTimeScreen( e );
+}
+}
+void ui_event_TimeDateDoneBtn_StandardButton( lv_event_t * e) {
     lv_event_code_t event_code = lv_event_get_code(e);lv_obj_t * target = lv_event_get_target(e);
 if ( event_code == LV_EVENT_CLICKED) {
       saveTimeDateSettings( e );

@@ -75,11 +75,12 @@ void ui_event_StandardButton1_StandardButton( lv_event_t * e);
 extern lv_obj_t *ui_StandardButton1;
 // SCREEN: ui_setTimeScreen
 void ui_setTimeScreen_screen_init(void);
+void ui_event_setTimeScreen( lv_event_t * e);
 extern lv_obj_t *ui_setTimeScreen;
 extern lv_obj_t *ui_Label7;
 extern lv_obj_t *ui_internetTime;
+void ui_event_TimeDateDoneBtn_StandardButton( lv_event_t * e);
 extern lv_obj_t *ui_TimeDateDoneBtn;
-void ui_event_TimeDateDoneBtn_Label12( lv_event_t * e);
 extern lv_obj_t *ui_twentyFourHrMode;
 extern lv_obj_t *ui_Dropdown1;
 extern lv_obj_t *ui_Label11;

@@ -8,6 +8,10 @@ public:
   void getTime();
   bool getInternetTimeEnabled();
   bool setInternetTimeEnabled(const bool enabled);
+  int getTimeZonePos();
+  bool setTimeZonePos(const int pos);
+
+
 
 
 

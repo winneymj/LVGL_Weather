@@ -50,7 +50,7 @@ lv_obj_set_style_text_color(ui_twentyFourHrMode, lv_color_hex(0x3F66E7), LV_PART
 lv_obj_set_style_text_opa(ui_twentyFourHrMode, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
 
 ui_Dropdown1 = lv_dropdown_create(ui_setTimeScreen);
-lv_dropdown_set_options( ui_Dropdown1, "Greenwich Mean Time\nUniversal Coordinated Time\nEuropean Central Time\nEastern European Time\n(Arabic) Egypt Standard Time\nEastern African Time\nMiddle East Time\nNear East Time\nPakistan Lahore Time\nIndia Standard Time\nBangladesh Standard Time\nVietnam Standard Time\nChina Taiwan Time\nJapan Standard Time\nAustralia Central Time\nAustralia Eastern Time\nSolomon Standard Time\nNew Zealand Standard Time\nMidway Islands Time\nHawaii Standard Time\nAlaska Standard Time\nPacific Standard Time\nPhoenix Standard Time\nMountain Standard Time\nCentral Standard Time\nEastern Standard Time\nIndiana Eastern Standard Time\nPuerto Rico and US Virgin Islands Time\nCanada Newfoundland Time\nArgentina Standard Time\nBrazil Eastern Time\nCentral African Time" );
+lv_dropdown_set_options( ui_Dropdown1, "Greenwich Mean Time\nUniversal Coordinated Time\nEuropean Central Time +1:00\nEastern European Time +2:00\n(Arabic) Egypt Standard Time +2:00\nEastern African Time +3:00\nMiddle East Time +3:30\nNear East Time +4:00\nPakistan Lahore Time +5:00\nIndia Standard Time +5:30\nBangladesh Standard Time +6:00\nVietnam Standard Time +7:00\nChina Taiwan Time +8:00\nJapan Standard Time +9:00\nAustralia Central Time +9:30\nAustralia Eastern Time +10:00\nSolomon Standard Time +11:00\nNew Zealand Standard Time +12:00\nMidway Islands Time -11:00\nHawaii Standard Time -10:00\nAlaska Standard Time -9:00\nPacific Standard Time -8:00\nPhoenix Standard Time -7:00\nMountain Standard Time -7:00\nCentral Standard Time -6:00\nEastern Standard Time -5:00\nIndiana Eastern Standard Time -5:00\nPuerto Rico and US Virgin Islands Time -4:00\nCanada Newfoundland Time -3:30\nArgentina Standard Time -3:00\nBrazil Eastern Time -3:00\nCentral African Time -1:00" );
 lv_obj_set_width( ui_Dropdown1, 342);
 lv_obj_set_height( ui_Dropdown1, LV_SIZE_CONTENT);   /// 1
 lv_obj_set_x( ui_Dropdown1, -12 );
@@ -72,10 +72,11 @@ lv_obj_set_height( ui_Label11, LV_SIZE_CONTENT);   /// 1
 lv_obj_set_x( ui_Label11, -128 );
 lv_obj_set_y( ui_Label11, -61 );
 lv_obj_set_align( ui_Label11, LV_ALIGN_CENTER );
-lv_label_set_text(ui_Label11,"Set Time Zone");
+lv_label_set_text(ui_Label11,"Time Zone");
 lv_obj_set_style_text_color(ui_Label11, lv_color_hex(0x3F66E7), LV_PART_MAIN | LV_STATE_DEFAULT );
 lv_obj_set_style_text_opa(ui_Label11, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
 
-lv_obj_add_event_cb(ui_comp_get_child(ui_TimeDateDoneBtn, UI_COMP_STANDARDBUTTON_LABEL12), ui_event_TimeDateDoneBtn_Label12, LV_EVENT_ALL, NULL);
+lv_obj_add_event_cb(ui_TimeDateDoneBtn, ui_event_TimeDateDoneBtn_StandardButton, LV_EVENT_ALL, NULL);
+lv_obj_add_event_cb(ui_setTimeScreen, ui_event_setTimeScreen, LV_EVENT_ALL, NULL);
 
 }
