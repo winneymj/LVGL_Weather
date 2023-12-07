@@ -42,10 +42,26 @@ ui_Label9 = lv_label_create(ui_Panel4);
 lv_obj_set_width( ui_Label9, LV_SIZE_CONTENT);  /// 1
 lv_obj_set_height( ui_Label9, LV_SIZE_CONTENT);   /// 1
 lv_obj_set_align( ui_Label9, LV_ALIGN_CENTER );
-lv_label_set_text(ui_Label9,"Time ->");
+lv_label_set_text(ui_Label9,"Set Time ->");
+
+ui_Panel5 = lv_obj_create(ui_loadingScreen);
+lv_obj_set_width( ui_Panel5, 100);
+lv_obj_set_height( ui_Panel5, 50);
+lv_obj_set_x( ui_Panel5, 174 );
+lv_obj_set_y( ui_Panel5, -8 );
+lv_obj_set_align( ui_Panel5, LV_ALIGN_CENTER );
+lv_obj_clear_flag( ui_Panel5, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
+
+ui_Label13 = lv_label_create(ui_Panel5);
+lv_obj_set_width( ui_Label13, LV_SIZE_CONTENT);  /// 1
+lv_obj_set_height( ui_Label13, LV_SIZE_CONTENT);   /// 1
+lv_obj_set_align( ui_Label13, LV_ALIGN_CENTER );
+lv_label_set_text(ui_Label13,"Time ->");
 
 lv_obj_add_event_cb(ui_Panel3, ui_event_Panel3, LV_EVENT_ALL, NULL);
 lv_obj_add_event_cb(ui_Label9, ui_event_Label9, LV_EVENT_ALL, NULL);
 lv_obj_add_event_cb(ui_Panel4, ui_event_Panel4, LV_EVENT_ALL, NULL);
+lv_obj_add_event_cb(ui_Label13, ui_event_Label13, LV_EVENT_ALL, NULL);
+lv_obj_add_event_cb(ui_Panel5, ui_event_Panel5, LV_EVENT_ALL, NULL);
 
 }

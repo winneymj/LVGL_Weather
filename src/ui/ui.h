@@ -37,6 +37,10 @@ void ui_event_Panel4( lv_event_t * e);
 extern lv_obj_t *ui_Panel4;
 void ui_event_Label9( lv_event_t * e);
 extern lv_obj_t *ui_Label9;
+void ui_event_Panel5( lv_event_t * e);
+extern lv_obj_t *ui_Panel5;
+void ui_event_Label13( lv_event_t * e);
+extern lv_obj_t *ui_Label13;
 // SCREEN: ui_newOrExistingConnections
 void ui_newOrExistingConnections_screen_init(void);
 extern lv_obj_t *ui_newOrExistingConnections;
@@ -45,6 +49,7 @@ extern lv_obj_t *ui_Label4;
 extern lv_obj_t *ui_Panel1;
 extern lv_obj_t *ui_newConnectionCB;
 extern lv_obj_t *ui_existConnectionCB;
+void ui_event_NewExistingCancelBtn( lv_event_t * e);
 extern lv_obj_t *ui_NewExistingCancelBtn;
 extern lv_obj_t *ui_ExistingCancelL;
 void ui_event_NewExistingOkBtn( lv_event_t * e);
@@ -84,6 +89,13 @@ extern lv_obj_t *ui_TimeDateDoneBtn;
 extern lv_obj_t *ui_twentyFourHrMode;
 extern lv_obj_t *ui_Dropdown1;
 extern lv_obj_t *ui_Label11;
+// SCREEN: ui_TimeScreen
+void ui_TimeScreen_screen_init(void);
+void ui_event_TimeScreen( lv_event_t * e);
+extern lv_obj_t *ui_TimeScreen;
+extern lv_obj_t *ui_TimeSreenSkipButton;
+extern lv_obj_t *ui_TimeScreenDarkButton;
+extern lv_obj_t *ui_TimeScreenTimeLabel;
 extern lv_obj_t *ui____initial_actions0;
 
 

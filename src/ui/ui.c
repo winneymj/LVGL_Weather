@@ -20,6 +20,10 @@ void ui_event_Panel4( lv_event_t * e);
 lv_obj_t *ui_Panel4;
 void ui_event_Label9( lv_event_t * e);
 lv_obj_t *ui_Label9;
+void ui_event_Panel5( lv_event_t * e);
+lv_obj_t *ui_Panel5;
+void ui_event_Label13( lv_event_t * e);
+lv_obj_t *ui_Label13;
 
 
 // SCREEN: ui_newOrExistingConnections
@@ -30,6 +34,7 @@ lv_obj_t *ui_Label4;
 lv_obj_t *ui_Panel1;
 lv_obj_t *ui_newConnectionCB;
 lv_obj_t *ui_existConnectionCB;
+void ui_event_NewExistingCancelBtn( lv_event_t * e);
 lv_obj_t *ui_NewExistingCancelBtn;
 lv_obj_t *ui_ExistingCancelL;
 void ui_event_NewExistingOkBtn( lv_event_t * e);
@@ -75,6 +80,15 @@ lv_obj_t *ui_TimeDateDoneBtn;
 lv_obj_t *ui_twentyFourHrMode;
 lv_obj_t *ui_Dropdown1;
 lv_obj_t *ui_Label11;
+
+
+// SCREEN: ui_TimeScreen
+void ui_TimeScreen_screen_init(void);
+void ui_event_TimeScreen( lv_event_t * e);
+lv_obj_t *ui_TimeScreen;
+lv_obj_t *ui_TimeSreenSkipButton;
+lv_obj_t *ui_TimeScreenDarkButton;
+lv_obj_t *ui_TimeScreenTimeLabel;
 lv_obj_t *ui____initial_actions0;
 
 ///////////////////// TEST LVGL SETTINGS ////////////////////
@@ -104,6 +118,24 @@ void ui_event_Label9( lv_event_t * e) {
     lv_event_code_t event_code = lv_event_get_code(e);lv_obj_t * target = lv_event_get_target(e);
 if ( event_code == LV_EVENT_CLICKED) {
       _ui_screen_change( &ui_setTimeScreen, LV_SCR_LOAD_ANIM_NONE, 0, 0, &ui_setTimeScreen_screen_init);
+}
+}
+void ui_event_Panel5( lv_event_t * e) {
+    lv_event_code_t event_code = lv_event_get_code(e);lv_obj_t * target = lv_event_get_target(e);
+if ( event_code == LV_EVENT_CLICKED) {
+      _ui_screen_change( &ui_TimeScreen, LV_SCR_LOAD_ANIM_NONE, 0, 0, &ui_TimeScreen_screen_init);
+}
+}
+void ui_event_Label13( lv_event_t * e) {
+    lv_event_code_t event_code = lv_event_get_code(e);lv_obj_t * target = lv_event_get_target(e);
+if ( event_code == LV_EVENT_CLICKED) {
+      _ui_screen_change( &ui_setTimeScreen, LV_SCR_LOAD_ANIM_NONE, 0, 0, &ui_setTimeScreen_screen_init);
+}
+}
+void ui_event_NewExistingCancelBtn( lv_event_t * e) {
+    lv_event_code_t event_code = lv_event_get_code(e);lv_obj_t * target = lv_event_get_target(e);
+if ( event_code == LV_EVENT_CLICKED) {
+      _ui_screen_change( &ui_loadingScreen, LV_SCR_LOAD_ANIM_NONE, 0, 0, &ui_loadingScreen_screen_init);
 }
 }
 void ui_event_NewExistingOkBtn( lv_event_t * e) {
@@ -150,6 +182,12 @@ if ( event_code == LV_EVENT_CLICKED) {
       saveTimeDateSettings( e );
 }
 }
+void ui_event_TimeScreen( lv_event_t * e) {
+    lv_event_code_t event_code = lv_event_get_code(e);lv_obj_t * target = lv_event_get_target(e);
+if ( event_code == LV_EVENT_SCREEN_LOADED) {
+      TimeScreenOnLoad( e );
+}
+}
 
 ///////////////////// SCREENS ////////////////////
 
@@ -164,6 +202,7 @@ ui_newOrExistingConnections_screen_init();
 ui_chooseConnection_screen_init();
 ui_passphrase_screen_init();
 ui_setTimeScreen_screen_init();
+ui_TimeScreen_screen_init();
 ui____initial_actions0 = lv_obj_create(NULL);
 lv_disp_load_scr( ui_loadingScreen);
 }

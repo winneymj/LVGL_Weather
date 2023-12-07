@@ -109,6 +109,7 @@ lv_obj_set_height( ui_ExistingOkL, LV_SIZE_CONTENT);   /// 1
 lv_obj_set_align( ui_ExistingOkL, LV_ALIGN_CENTER );
 lv_label_set_text(ui_ExistingOkL,"OK");
 
+lv_obj_add_event_cb(ui_NewExistingCancelBtn, ui_event_NewExistingCancelBtn, LV_EVENT_ALL, NULL);
 lv_obj_add_event_cb(ui_NewExistingOkBtn, ui_event_NewExistingOkBtn, LV_EVENT_ALL, NULL);
 
 }

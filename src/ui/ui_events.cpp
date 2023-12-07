@@ -310,3 +310,10 @@ void initializeTimeScreen(lv_event_t * e)
 
   // @TODO Do checkboxes too
 }
+
+void TimeScreenOnLoad(lv_event_t * e)
+{
+  // Add a custom font for the time to the display
+    lv_obj_set_style_text_font(ui_TimeScreenTimeLabel, &arial_160, 0);
+    lv_label_set_text_fmt(ui_TimeScreenTimeLabel, "%02d:%02d", 0, 0);
+}

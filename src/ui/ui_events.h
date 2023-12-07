@@ -15,6 +15,7 @@ void InitializePassphrasePage(lv_event_t * e);
 void passphraseOkCallback(lv_event_t * e);
 void initializeTimeScreen(lv_event_t * e);
 void saveTimeDateSettings(lv_event_t * e);
+void TimeScreenOnLoad(lv_event_t * e);
 
 #ifdef __cplusplus
 } /*extern "C"*/
