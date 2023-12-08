@@ -297,9 +297,11 @@ void saveTimeDateSettings(lv_event_t * e)
 
   // Save the set time from internet checkbox and the timezone
   const bool internetCheckedState = lv_obj_get_state(ui_internetTime) & LV_STATE_CHECKED ? true : false;
+  const bool twentyFourHourMode = lv_obj_get_state(ui_twentyFourHrMode) & LV_STATE_CHECKED ? true : false;
   const int timezonePos = lv_dropdown_get_selected(ui_Dropdown1);
   ntpTime.setInternetTimeEnabled(internetCheckedState);
   ntpTime.setTimeZonePos(timezonePos);
+  ntpTime.set24HourMode(twentyFourHourMode);
   ntpTime.getTime();
 }
 
@@ -307,13 +309,19 @@ void initializeTimeScreen(lv_event_t * e)
 {
   auto timezonePos = ntpTime.getTimeZonePos();
   lv_dropdown_set_selected(ui_Dropdown1, timezonePos);
-
-  // @TODO Do checkboxes too
+  auto twentyFourMode = ntpTime.get24HourMode();
+  if (twentyFourMode)
+    lv_obj_add_state(ui_twentyFourHrMode, LV_STATE_CHECKED);
+  else
+    lv_obj_clear_state(ui_twentyFourHrMode, LV_STATE_CHECKED);
 }
 
 void TimeScreenOnLoad(lv_event_t * e)
 {
+  auto twentyFourMode = ntpTime.get24HourMode();
+  auto hour = ntpTime.getHour(twentyFourMode);
+  auto minutes = ntpTime.getMinutes();
   // Add a custom font for the time to the display
-    lv_obj_set_style_text_font(ui_TimeScreenTimeLabel, &arial_160, 0);
-    lv_label_set_text_fmt(ui_TimeScreenTimeLabel, "%02d:%02d", 0, 0);
+  lv_obj_set_style_text_font(ui_TimeScreenTimeLabel, &arial_160, 0);
+  lv_label_set_text_fmt(ui_TimeScreenTimeLabel, "%d:%d", hour, minutes);
 }

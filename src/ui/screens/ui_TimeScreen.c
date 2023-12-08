@@ -11,6 +11,8 @@ ui_TimeScreen = lv_obj_create(NULL);
 lv_obj_clear_flag( ui_TimeScreen, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
 
 ui_TimeSreenSkipButton = ui_StandardButton_create(ui_TimeScreen);
+lv_obj_set_width( ui_TimeSreenSkipButton, 80);
+lv_obj_set_height( ui_TimeSreenSkipButton, 40);
 lv_obj_set_x( ui_TimeSreenSkipButton, 169 );
 lv_obj_set_y( ui_TimeSreenSkipButton, 123 );
 
@@ -23,15 +25,16 @@ lv_obj_set_y( ui_TimeScreenDarkButton, -116 );
 lv_label_set_text(ui_comp_get_child(ui_TimeScreenDarkButton, UI_COMP_STANDARDBUTTON_LABEL12),"DARK");
 
 ui_TimeScreenTimeLabel = lv_label_create(ui_TimeScreen);
-lv_obj_set_width( ui_TimeScreenTimeLabel, 433);
+lv_obj_set_width( ui_TimeScreenTimeLabel, 446);
 lv_obj_set_height( ui_TimeScreenTimeLabel, 136);
-lv_obj_set_x( ui_TimeScreenTimeLabel, -4 );
-lv_obj_set_y( ui_TimeScreenTimeLabel, 3 );
+lv_obj_set_x( ui_TimeScreenTimeLabel, 0 );
+lv_obj_set_y( ui_TimeScreenTimeLabel, 6 );
 lv_obj_set_align( ui_TimeScreenTimeLabel, LV_ALIGN_CENTER );
 lv_label_set_long_mode(ui_TimeScreenTimeLabel,LV_LABEL_LONG_CLIP);
-lv_label_set_text(ui_TimeScreenTimeLabel,"");
+lv_label_set_text(ui_TimeScreenTimeLabel,"Time Here");
 lv_obj_set_style_text_color(ui_TimeScreenTimeLabel, lv_color_hex(0x3F66E7), LV_PART_MAIN | LV_STATE_DEFAULT );
 lv_obj_set_style_text_opa(ui_TimeScreenTimeLabel, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
+lv_obj_set_style_text_align(ui_TimeScreenTimeLabel, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN| LV_STATE_DEFAULT);
 
 lv_obj_add_event_cb(ui_TimeScreen, ui_event_TimeScreen, LV_EVENT_ALL, NULL);
 

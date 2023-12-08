@@ -180,6 +180,7 @@ void ui_event_TimeDateDoneBtn_StandardButton( lv_event_t * e) {
     lv_event_code_t event_code = lv_event_get_code(e);lv_obj_t * target = lv_event_get_target(e);
 if ( event_code == LV_EVENT_CLICKED) {
       saveTimeDateSettings( e );
+      _ui_screen_change( &ui_loadingScreen, LV_SCR_LOAD_ANIM_NONE, 0, 0, &ui_loadingScreen_screen_init);
 }
 }
 void ui_event_TimeScreen( lv_event_t * e) {

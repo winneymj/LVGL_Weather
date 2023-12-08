@@ -153,4 +153,56 @@ bool NtpTime::setTimeZonePos(const int pos)
   return result;
 }
 
+int NtpTime::convertTo12Hour(int hour)
+{
+  return hour > 12 ? hour % 12 : hour; 
+}
+
+int NtpTime::getHour(const bool hour24Mode)
+{
+  struct tm timeinfo;
+  if(!getLocalTime(&timeinfo))
+  {
+    Serial.println("Failed to obtain time");
+    return 0;
+  }
+
+  return (hour24Mode ? timeinfo.tm_hour : convertTo12Hour(timeinfo.tm_hour));
+}
+
+int NtpTime::getMinutes()
+{
+  struct tm timeinfo;
+  if(!getLocalTime(&timeinfo))
+  {
+    Serial.println("Failed to obtain time");
+    return 0;
+  }
+
+  return timeinfo.tm_min;
+}
+
+bool NtpTime::set24HourMode(const bool hour24Mode)
+{
+  Serial.print("set24HourMode()=");
+  Serial.println(hour24Mode);
+
+  // Save using Preferences library so it is persistent across reboot
+  preferences.begin("my_app");
+  auto result = preferences.putBool("tfhourmode", hour24Mode);
+  preferences.end();
+  return result;
+}
+
+bool NtpTime::get24HourMode()
+{
+  preferences.begin("my_app");
+  bool value = preferences.getBool("tfhourmode", false);
+  preferences.end();
+
+  Serial.print("get24HourMode()=");
+  Serial.println(value);
+
+  return value;
+}
 
